@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "eslint-config-defaults": "^9.0.0",
     "nedb": "^1.8.0",
     "react": "^15.4.2",
     "react-desktop": "^0.2.19",
@@ -12,6 +13,7 @@
   "devDependencies": {
     "devtron": "^1.4.0",
     "electron": "^1.6.2",
+    "eslint": "^3.18.0",
     "react-scripts": "0.9.5"
   },
   "main": "./src/main.js",

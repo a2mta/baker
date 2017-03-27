@@ -3,7 +3,7 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-
+const Datastore = require('nedb');
 const path = require('path');
 const url = require('url');
 
@@ -11,10 +11,11 @@ const url = require('url');
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-
-
-
 function createWindow() {
+  db = new Datastore({
+    filename: 'data.db',
+    autoload: true
+  });
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,

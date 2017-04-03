@@ -1,68 +1,62 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
-const Datastore = require('nedb');
-const path = require('path');
-const url = require('url');
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
-
-function createWindow() {
-  db = new Datastore({
-    filename: 'data.db',
-    autoload: true
-  });
-  // Create the browser window.
+'use strict';
+var electron = require('electron');
+var {app, BrowserWindow, ipcMain} = electron;
+var mainWindow = null;
+var Datastore = require('nedb');
+var db = new Datastore({
+  filename: 'data.db',
+  autoload: true
+});
+const startUrl = process.env.ELECTRON_START_URL || url.format({
+  pathname: path.join(__dirname, '/../build/index.html'),
+  protocol: 'file:',
+  slashes: true
+});
+app.on('ready', () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600
+    width: 1920,
+    height: 1280
   });
-
-  // and load the index.html of the app.
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, '/../build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  });
+    BrowserWindow.addDevToolsExtension(
+      'C:/Users/User.DEV34/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/2.0.12_0'
+    );
   mainWindow.loadURL(startUrl);
+  mainWindow.webContents.openDevTools();
+});
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
+// Listen for async message from renderer process
+ipcMain.on('async', (event, arg) => {
+  // Print 1
+  console.log(arg);
+  db.insert(arg, function(err, newDoc) { // Callback is optional
+    // newDoc is the newly inserted document, including its _id
+    // newDoc has no key called notToBeSaved since its value was undefined
   });
-}
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function() {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+//   event.sender.send('async-reply', 2);
 });
 
-app.on('activate', function() {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow();
-  }
+ipcMain.on('find', (event, arg) => {
+  // Print 1
+  console.log(arg);
+  db.find(arg, function(err, docs) {
+    // docs is an array containing documents Mars, Earth, Jupiter
+    // If no document is found, docs is equal to []
+    event.sender.send('async-reply', docs);
+  });
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// Listen for sync message from renderer process
+ipcMain.on('sync', (event, arg) => {
+  // Print 3
+  console.log(arg);
+  // Send value synchronously back to renderer process
+  event.returnValue = 4;
+  // Send async message to renderer process
+  mainWindow.webContents.send('ping', 5);
+});
+
+// Make method externaly visible
+exports.pong = arg => {
+  //Print 6
+  console.log(arg);
+};

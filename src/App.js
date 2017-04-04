@@ -5,36 +5,22 @@ import path from 'path';
 import low from 'lowdb';
 let {ipcRenderer, remote} = window.require('electron');
 let main = remote.require("./main.js");
-let items = [];
+var items = {
+  callback: null
+};
 
-// Listen for async-reply message from main process
-
-
-// Listen for main message
-
-
-
-function getStuff(stuff) {
-  ipcRenderer.send('find', stuff);
-  return (() => {
-    var s = [];
-    ipcRenderer.on('async-reply', (event, arg) => {
-      items = arg;
-      // Send sync message to main process
-      //   let mainValue = ipcRenderer.sendSync('sync', 3);
-      // Print 4
-      //   console.log(mainValue);
-      s = arg;
-    });
-    return s;
-  }
-  );
-}
+ipcRenderer.on('async-reply', (event, arg) => {
+  items.callback(arg);
+});
 
 
 class App extends Component {
-  componentWillReceiveProps() {
-    // console.log(this.props);
+  componentWillMount() {
+    items.callback = (data) => {
+      this.setState({
+        items: data
+      });
+    };
   }
   onAdd() {
     var doc = {
@@ -52,46 +38,211 @@ class App extends Component {
     ipcRenderer.send('async', doc);
   }
   onFind() {
-    console.log(getStuff({
+    ipcRenderer.send('find', {
       n: 5
-    })());
+    });
   }
   render() {
-    console.log(this.props)
+    console.log(this.state)
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <div className="window">
+   <header className="toolbar toolbar-header">
+  <h1 className="title">Header with actions</h1>
+
+  <div className="toolbar-actions">
+    <div className="btn-group">
+      <button className="btn btn-default">
+        <span className="icon icon-home"></span>
+      </button>
+      <button className="btn btn-default">
+        <span className="icon icon-folder"></span>
+      </button>
+      <button className="btn btn-default active">
+        <span className="icon icon-cloud"></span>
+      </button>
+      <button className="btn btn-default">
+        <span className="icon icon-popup"></span>
+      </button>
+      <button className="btn btn-default">
+        <span className="icon icon-shuffle"></span>
+      </button>
+    </div>
+
+    <button className="btn btn-default">
+      <span className="icon icon-home icon-text"></span>
+      Filters
+    </button>
+
+    <button className="btn btn-default btn-dropdown pull-right">
+      <span className="icon icon-megaphone"></span>
+    </button>
+  </div>
+</header>
+      <div className="window-content">
+      <div className="">
+        <div className="pane-group">
+          <div className="pane pane-sm sidebar">
+            <nav className="nav-group">
+              <h5 className="nav-group-title">Favorites</h5>
+              <span className="nav-group-item">
+                <span className="icon icon-home"></span>
+                connors
+              </span>
+              <span className="nav-group-item active">
+                <span className="icon icon-light-up"></span>
+                Photon
+              </span>
+              <span className="nav-group-item">
+                <span className="icon icon-download"></span>
+                Downloads
+              </span>
+              <span className="nav-group-item">
+                <span className="icon icon-folder"></span>
+                Documents
+              </span>
+              <span className="nav-group-item">
+                <span className="icon icon-window"></span>
+                Applications
+              </span>
+              <span className="nav-group-item">
+                <span className="icon icon-signal"></span>
+                AirDrop
+              </span>
+              <span className="nav-group-item">
+                <span className="icon icon-monitor"></span>
+                Desktop
+              </span>
+            </nav>
+          </div>
+
+          <div className="pane">
+            <table className="table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Kind</th>
+                  <th>Date Modified</th>
+                  <th>Author</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>bars.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>base.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>button-groups.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>buttons.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>docs.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>forms.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>grid.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>icons.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>images.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>lists.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>mixins.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>navs.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>normalize.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>photon.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>tables.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>tabs.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>utilities.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+                <tr>
+                  <td>variables.scss</td>
+                  <td>Document</td>
+                  <td>Oct 13, 2015</td>
+                  <td>connors</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <button onClick={this.onAdd}>
-            save
-        </button>
-         <button onClick={this.onFind}>
-            find
-        </button>
-        <p className="App-intro">
-          <Items items={items}/>
-        </p>
+        </div>
       </div>
-      );
-  }
-}
-
-
-class Items extends Component {
-  componentWillReceiveProps() {
-    console.log(this.props);
-  }
-  render() {
-    console.log(this.props)
-    return (
-      <div>
-        {items}
         </div>
       );
   }
 }
-
 
 export default App;

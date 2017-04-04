@@ -17,9 +17,10 @@ app.on('ready', () => {
     width: 1920,
     height: 1280
   });
-    BrowserWindow.addDevToolsExtension(
-      'C:/Users/User.DEV34/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/2.0.12_0'
-    );
+  BrowserWindow.addDevToolsExtension(
+    'C:/Users/User.DEV34/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/2.0.12_0'
+  );
+  mainWindow.setMenu(null);
   mainWindow.loadURL(startUrl);
   mainWindow.webContents.openDevTools();
 });

@@ -1,0 +1,48 @@
+// Variables
+@import "style/variables.scss";
+
+// Mixins
+@import "style/mixins.scss";
+// Normalize, Base, & Utilities CSS
+@import "style/normalize.scss";
+@import "style/base.scss";
+@import "style/utilities.scss";
+
+// Components
+@import "style/buttons.scss";
+@import "style/button-groups.scss";
+@import "style/bars.scss";
+@import "style/forms.scss";
+@import "style/grid.scss";
+@import "style/images.scss";
+@import "style/lists.scss";
+@import "style/navs.scss";
+@import "style/icons.scss";
+@import "style/tables.scss";
+@import "style/tabs.scss";
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
